@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libFitSec", "libfitsec\libfitsec.vcxproj", "{3B631B0D-6665-43D9-825B-F562CF8048F9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cshared", "cshared\cshared.vcxproj", "{D5918B85-FA45-4F75-9B50-C2D3E34ABA17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1327EFB2-C6C0-4785-B343-B3038979DFC9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_engine", "tests\test_engine.vcxproj", "{B51474B6-2547-4AAF-A038-796AE09D0327}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B631B0D-6665-43D9-825B-F562CF8048F9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3B631B0D-6665-43D9-825B-F562CF8048F9}.Debug|Win32.Build.0 = Debug|Win32
+		{3B631B0D-6665-43D9-825B-F562CF8048F9}.Release|Win32.ActiveCfg = Release|Win32
+		{3B631B0D-6665-43D9-825B-F562CF8048F9}.Release|Win32.Build.0 = Release|Win32
+		{D5918B85-FA45-4F75-9B50-C2D3E34ABA17}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D5918B85-FA45-4F75-9B50-C2D3E34ABA17}.Debug|Win32.Build.0 = Debug|Win32
+		{D5918B85-FA45-4F75-9B50-C2D3E34ABA17}.Release|Win32.ActiveCfg = Release|Win32
+		{D5918B85-FA45-4F75-9B50-C2D3E34ABA17}.Release|Win32.Build.0 = Release|Win32
+		{B51474B6-2547-4AAF-A038-796AE09D0327}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B51474B6-2547-4AAF-A038-796AE09D0327}.Debug|Win32.Build.0 = Debug|Win32
+		{B51474B6-2547-4AAF-A038-796AE09D0327}.Release|Win32.ActiveCfg = Release|Win32
+		{B51474B6-2547-4AAF-A038-796AE09D0327}.Release|Win32.Build.0 = Release|Win32
+		{DAFC0D52-71F2-4F70-867A-91AE8A49304C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DAFC0D52-71F2-4F70-867A-91AE8A49304C}.Debug|Win32.Build.0 = Debug|Win32
+		{DAFC0D52-71F2-4F70-867A-91AE8A49304C}.Release|Win32.ActiveCfg = Release|Win32
+		{DAFC0D52-71F2-4F70-867A-91AE8A49304C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B51474B6-2547-4AAF-A038-796AE09D0327} = {1327EFB2-C6C0-4785-B343-B3038979DFC9}
+	EndGlobalSection
+EndGlobal
