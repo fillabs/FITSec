@@ -1,6 +1,6 @@
 /*********************************************************************
 This file is a part of FItsSec project: Implementation of ETSI TS 103 097
-Copyright (C) 2015  Denis Filatov (denis.filatov()fillabs.com)
+Copyright (C) 2015  Denis Filatov (danya.filatov()gmail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with Foobar.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.txt>.
+along with Fitsec.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.txt>.
 @license LGPL-3.0+ <http://www.gnu.org/licenses/lgpl-3.0.txt>
 
 In particular cases this program can be distributed under other license

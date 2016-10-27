@@ -12,9 +12,9 @@ be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with Foobar.  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
-@license GPL-3.0+ <http://www.gnu.org/licenses/gpl-3.0.txt>
+You should have received a copy of the GNU Lesser General Public License
+along with Fitsec.  If not, see <http://www.gnu.org/licenses/lgpl-3.0.txt>.
+@license LGPL-3.0+ <http://www.gnu.org/licenses/lgpl-3.0.txt>
 
 In particular cases this program can be distributed under other license
 by simple request to the author. 
