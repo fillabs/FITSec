@@ -32,3 +32,7 @@ build
 # Debug files
 *.dSYM/
 *.su
+
+#Visual studio
+*.opensdf
+*.suo
