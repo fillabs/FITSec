@@ -34,5 +34,6 @@ build
 *.su
 
 #Visual studio
+*.sdf
 *.opensdf
 *.suo
