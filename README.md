@@ -79,7 +79,7 @@ When payload creation is well done, the message could be encrypted and/or signed
 The GN layer must call __*FitSec_SignMessage*__ to perform these tasks.
 This functions takes same parameters as the __*FitSec_PrepareMessage*__.
 
-_Note: encryption is not implemented yet._
+_Note: encryption is not implemented yet. See Limitations section_
 
 The function returns the full size of secured packet or -1 in case of error. The error id and error description are provided in the message information strucure.
 
@@ -97,4 +97,10 @@ Function verifies the message signature, returns true or false and fill the erro
 
 It is up to facility layer to check the conformance of the incoming message with correspondent SSP bitfield and to take or doesn't take it into account.
 
-The function __*FitSec_Decrypt*__ will be implemented later to decrypt message payload.
+The function __*FitSec_Decrypt*__ will be implemented soon to be able to use encrypted messages.
+
+## Limitations ##
+- The library doesn't support encryption for the moment.
+
+## Author ##
+The library was created in 2015-2016 by Denis Filatov (danya.filatov()gmail.com) in order to validate the ETSI's ITS security test suite. The library is free for non-commercial and not-for-profit usage, otherwise please contact the author.
