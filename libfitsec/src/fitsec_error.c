@@ -20,6 +20,7 @@ In particular cases this program can be distributed under other license
 by simple request to the author.
 *********************************************************************/
 
+#define _CRT_SECURE_NO_WARNINGS
 #include "fitsec_i.h"
 #include <errno.h>
 #include <string.h>

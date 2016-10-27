@@ -270,7 +270,13 @@ static void FN_THROW(RuntimeException) _Certificate_ReadAIDList(FSCertificate * 
 	int i;
 	e4c.err.err = FSERR_CERTIFICATE | FSERR_SUBJECT_ATTRIBUTE | FSERR_AID_LIST;
 	for (i = 0; *ptr < end; i++){
+		if (i >= MAX_AID_COUNT){
+			*perror = e4c.err.err;
+			throw(RuntimeException, *perror, NULL);
+		}
 		c->aidssp[i].aid = (FSItsAid)cintx_read(ptr, end, perror);
+		// fill the SSP with 0xFF to permit any services
+		memset(c->aidssp[i].u.data, 0xFF, sizeof(c->aidssp[i].u.data));
 	}
 	c->aidsspcount = i;
 }
@@ -280,6 +286,10 @@ static void FN_THROW(RuntimeException) _Certificate_ReadAIDSSPList(FSCertificate
 	int i;
 	e4c.err.err = FSERR_CERTIFICATE | FSERR_SUBJECT_ATTRIBUTE | FSERR_AID_SSP_LIST;
 	for (i = 0; *ptr < end; i++){
+		if (i >= MAX_AID_COUNT){
+			*perror = e4c.err.err;
+			throw(RuntimeException, *perror, NULL);
+		}
 		c->aidssp[i].aid = (FSItsAid)cintx_read(ptr, end, perror);
 		cstrn_read((char*)&c->aidssp[i].u.data[0], 31, ptr, end, perror);
 	}
@@ -462,7 +472,7 @@ FSBOOL Certificate_ValidateChain(FSCertificate * c, int *perror)
 	return FSFALSE;
 }
 
-FSBOOL Certificate_IsValidFor(const FSCertificate * c, const FSItsAidSsp * ssp, const FSLocation * position, Time64 time, int * const perror)
+FSBOOL Certificate_IsValidForTime(const FSCertificate * c, Time64 time, int * const perror)
 {
 	uint32_t t = (uint32_t)(time / 1000);
 	// check time
@@ -470,28 +480,42 @@ FSBOOL Certificate_IsValidFor(const FSCertificate * c, const FSItsAidSsp * ssp, 
 		*perror = FSERR_INVALID | FSERR_CERTIFICATE | FSERR_TIME;
 		return FSFALSE;
 	}
+	return FSTRUE;
+}
 
-	//check aid
-	if (ssp){
-		int i;
-		for (i = 0; i < c->aidsspcount; i++){
-			if (c->aidssp[i].aid == ssp->aid){
-				if (ssp->u.ssp.version == 0)
-					break;
-				if(c->aidssp[i].u.ssp.version == ssp->u.ssp.version){
-					if ((c->aidssp[i].u.ssp.flags & ssp->u.ssp.flags) == ssp->u.ssp.flags){
-						break;
+FSBOOL AIDSSP_Match(const FSItsAidSsp * tpl, const FSItsAidSsp * ssp)
+{
+	if (tpl->aid == ssp->aid){
+		if (tpl->u.ssp.version > 0) {
+			if (ssp->u.ssp.version == 0){
+				int i;
+				for (i = 0; i < (sizeof(tpl->u.data) / sizeof(int)); i++){
+					if ((tpl->u.ssp.flags[i] & ssp->u.ssp.flags[i]) != ssp->u.ssp.flags[i]){
+						return FSFALSE;
 					}
 				}
+				return FSTRUE;
 			}
 		}
-		if (i == c->aidsspcount){
-			*perror = FSERR_INVALID | FSERR_CERTIFICATE | FSERR_AID;
-			return FSFALSE;
+	}
+	return FSFALSE;
+}
+
+FSBOOL Certificate_IsValidForSSP(const FSCertificate * c, const FSItsAidSsp * ssp, int * const perror)
+{
+	int i;
+	for (i = 0; i < c->aidsspcount; i++){
+		if (c->aidssp[i].aid == ssp->aid &&
+			AIDSSP_Match(&c->aidssp[i], ssp)) {
+			return FSTRUE;
 		}
 	}
-	
-	//check position
+	*perror = FSERR_INVALID | FSERR_CERTIFICATE | FSERR_AID;
+	return FSFALSE;
+}
+
+FSBOOL Certificate_IsValidForPosition(const FSCertificate * c, const FSLocation * position, int * const perror)
+{
 	if (position){
 		if (!GeographicRegion_IsPointInside(&c->region, (const TwoDLocation*)position)){
 			*perror = FSERR_INVALID | FSERR_CERTIFICATE | FSERR_REGION;
@@ -499,6 +523,15 @@ FSBOOL Certificate_IsValidFor(const FSCertificate * c, const FSItsAidSsp * ssp, 
 		}
 	}
 	return FSTRUE;
+}
+
+FSBOOL Certificate_IsValidFor(const FSCertificate * c, const FSItsAidSsp * ssp, const FSLocation * position, Time64 time, int * const perror)
+{
+	return  (
+		Certificate_IsValidForTime(c, time, perror) &&
+		Certificate_IsValidForSSP(c, ssp, perror) &&
+		Certificate_IsValidForPosition(c, position, perror)
+	);
 }
 
 const FSItsAidSsp *   Certificate_GetAidSsp(const FSCertificate * c, FSItsAid aid)

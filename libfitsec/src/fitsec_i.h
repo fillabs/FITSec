@@ -36,6 +36,7 @@ extern "C" {
 #define DEFAULT_PROTOCOL_VERSION 2
 #define FITSEC_AID_CAM  36
 #define FITSEC_AID_DENM 37
+#define MAX_AID_COUNT  16  // maximum 16 AID/SSP items per certificate
 
 	HashedId3 HashedId8toId3(HashedId8 id8);
 	HashedId8 toHashedId8(const unsigned char * buf);
@@ -89,19 +90,19 @@ extern "C" {
 	void			FitSecHash_Finalize(FitSec * e, FitSecHash * h, unsigned char * hash);
 	*/
 	struct FSCertificate {
-		cring_t   ring; // ring to be added to my_certs or unknown_certs
-		int       _rcntr;   // retain/release counter
+		cring_t   ring;  // ring to be added to my_certs or unknown_certs
+		int      _rcntr; // retain/release counter
 
-		FitSec  * e;
-		int       flags;
+		FitSec         * e;
+		int              flags;
 
-		uint8_t         hash[32];
-		HashedId8       digest;
-		FSCertificate   * signer;
-		HashedId8       signer_digest;
+		uint8_t          hash[32];
+		HashedId8        digest;
+		FSCertificate  * signer;
+		HashedId8        signer_digest;
 
-		SubjectType		subjectType;
-		char			subjectName[32];
+		SubjectType		 subjectType;
+		char			 subjectName[32];
 
 		uint32_t         start_time;
 		uint32_t         end_time;
@@ -110,7 +111,7 @@ extern "C" {
 		EccPoint         recValue;
 		SubjectAssurance assurance;
 		int              aidsspcount;
-		FSItsAidSsp        aidssp[16];
+		FSItsAidSsp      aidssp[MAX_AID_COUNT];
 
 		FitSecKey        vkey;
 		FitSecKey        ekey;
@@ -134,19 +135,24 @@ extern "C" {
 	FSBOOL        Certificate_ValidateChain(FSCertificate * c, int *error);
 
 	FSBOOL        CalculateCertificateHash(FitSec * e, FSCryptPKAlgorithm alg, const char * ptr, int size, unsigned char * hash, int * const perror);
+	FSBOOL        Certificate_IsValidForTime(const FSCertificate * c, Time64 time, int * const perror);
+	FSBOOL        Certificate_IsValidForPosition(const FSCertificate * c, const FSLocation * position, int * const perror);
+	FSBOOL        Certificate_IsValidForSSP(const FSCertificate * c, const FSItsAidSsp * ssp, int * const perror);
 	FSBOOL        Certificate_IsValidFor(const FSCertificate * c, const FSItsAidSsp * ssp, const FSLocation * position, Time64 time, int * const perror);
 	const FSItsAidSsp *   Certificate_GetAidSsp(const FSCertificate * c, FSItsAid aid);
+	
+	FSBOOL        AIDSSP_Match(const FSItsAidSsp * mask, const FSItsAidSsp * ssp);
 
 	typedef struct CertificateHash CertificateHash;
 	CertificateHash * CertificateHash_New    ();
 	void              CertificateHash_Free   (CertificateHash *);
 	void              CertificateHash_Clear  (CertificateHash *);
 	void              CertificateHash_Purge  (CertificateHash *);
-	FSCertificate *     CertificateHash_Add    (CertificateHash *, FSCertificate *);
-	FSCertificate *     CertificateHash_Delete (CertificateHash *, HashedId8);
-	FSCertificate *     CertificateHash_Find   (CertificateHash *, HashedId8);
-	FSBOOL            CertificateHash_Relink (CertificateHash * ch, FSCertificate * c);
-	void              CertificateHash_RelinkSigners(CertificateHash * ch);
+	FSCertificate *   CertificateHash_Add    (CertificateHash *, FSCertificate *);
+	FSCertificate *   CertificateHash_Delete (CertificateHash *, HashedId8);
+	FSCertificate *   CertificateHash_Find   (CertificateHash *, HashedId8);
+	FSBOOL            CertificateHash_Relink (CertificateHash *, FSCertificate *);
+	void              CertificateHash_RelinkSigners(CertificateHash *);
 
 	struct FitSec
 	{
@@ -155,14 +161,14 @@ extern "C" {
 		unsigned int         version;
 		unsigned int         error;
 		CertificateHash *    certs;
-		FSCertificate *        currentCert;
+		FSCertificate *      currentCert;
 
 		cring_t              mycerts;
 		cring_t              trusted;
 		cring_t              unknown;
 		cring_t              pool;
 
-		FSCertificate *        requestedCert;
+		FSCertificate *      requestedCert;
 		int                  newNeighbourFlag;
 		Time64               nextCertTime;
 	};

@@ -77,16 +77,6 @@ extern "C" {
 	};
 	typedef FSBOOL FitSec_Event_Fn(FitSec * e, void * user, int event, void * params);
 
-	typedef struct FitSecMsgProfile
-	{
-		FSItsAid      aid;         // set to FITSEC_AID_ANY fro default profile
-		int           certPeriod;  // maximum delay in msec between two certificates
-		                           // set to -1 to do not send certificates automatically,
-			                       // set to  0 to send certificates in each CAM
-		unsigned int  flags;       // see FitSecEngineFlags
-		FSPayloadType payloadType; // defalt payload type
-	}FitSecMsgProfile; /* Unused for the moment */
-
 	/** Configuration flags */
 	enum FitSecEngineFlags {
 		/** must be set to send requests for unknown certificates */
@@ -125,7 +115,7 @@ extern "C" {
 	FITSEC_EXPORT void  FitSecConfig_InitDefault(FitSecConfig * cfg);
 
 	/** Create and initialize engine */
-	FITSEC_EXPORT FitSec *              FitSec_New(const FitSecConfig * config);
+	FITSEC_EXPORT FitSec * FitSec_New(const FitSecConfig * config);
 	
 	/** Install certificate (root, AA, local AT pseudonymes) */
 	FITSEC_EXPORT const FSCertificate * FitSec_InstallCertificate(FitSec * e,
@@ -137,14 +127,14 @@ extern "C" {
 
 	/** Select certificate to be used as current pseudonym.
 	    This function will trigger the Id changing process */
-	FITSEC_EXPORT FSBOOL                FitSec_Select(FitSec * e, unsigned int cert_id);
+	FITSEC_EXPORT FSBOOL FitSec_Select(FitSec * e, unsigned int cert_id);
 
 	/** Cleanup all data, forget all foreign certificates, 
 	    clean all local certificates if clean_local flag is set */
-	FITSEC_EXPORT void                  FitSec_Clean(FitSec * e, int clean_local);
+	FITSEC_EXPORT void FitSec_Clean(FitSec * e, int clean_local);
 	
 	/** Cleanup engine and free all allocated memory */
-	FITSEC_EXPORT void                  FitSec_Free(FitSec * e);
+	FITSEC_EXPORT void FitSec_Free(FitSec * e);
 
 	/** Returns the message corresponding to the error value */
 	FITSEC_EXPORT const char * FitSec_ErrorMessage(int err);
@@ -154,9 +144,9 @@ extern "C" {
 		union{
 			struct {
 				unsigned char  version;
-				unsigned int   flags;
+				unsigned int   flags[1];
 			}ssp;
-			char data[32];
+			char data[32]; // the length of SSP is limited to 31 octet in TS103097
 		}u;
 	} FSItsAidSsp;
 

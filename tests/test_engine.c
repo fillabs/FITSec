@@ -48,11 +48,11 @@ FILE * out;
 const char * outpath = "msg.log";
 
 static copt_t options [] = {
-    {"h?", "help",      COPT_HELP,                 NULL         ,    "Print this help page"},
-    {"C",  "config",    COPT_CFGFILE,              &cfgfile     ,    "Config file"         },
-	{ "s", "storage",   COPT_STR,                  &cfg1.storage ,    "Storage directory"   },
-	{ "x", "hex",       COPT_BOOL,                 &cfg1.hexadecimal, "Certificates are stored as hexadecimal stream" },
-	{ "o", "out", COPT_STR, &outpath, "Output path" },
+    { "h?", "help",     COPT_HELP,     NULL,              "Print this help page"},
+    { "C",  "config",   COPT_CFGFILE,  &cfgfile,          "Config file"         },
+	{ "s", "storage",   COPT_STR,      &cfg1.storage,     "Storage directory"   },
+	{ "x", "hex",       COPT_BOOL,     &cfg1.hexadecimal, "Certificates are stored as hexadecimal stream" },
+	{ "o", "out",       COPT_STR,      &outpath,          "Output path" },
 	{ NULL, NULL, COPT_END, NULL, NULL }
 };
 
