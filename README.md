@@ -33,7 +33,7 @@ Processing of outgoing messages is splitted to two stages:
 
 In order to optimize the memory manipulatoin efforts, all operations are done directly in the buffer provided by the facility layer.
 This buffer can be passed later to the transport layer. The size of the buffer shall be well enough to contain all security headers,
-sertificates and the payload of the message.
+certificates and the payload of the message.
 The GeoNetworking Security Header takes place between Basic Header and Common Header elements in GeoNetworking message strucure.
 So, to send a secured GN message, facylity layer shall perform following actions:
 - prepare Basic GN Header
