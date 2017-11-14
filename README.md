@@ -6,6 +6,7 @@ The library provides the security envelop to be used for the Intelligent Transpo
 [ETSI EN 302 636-4-1](http://www.etsi.org/deliver/etsi_en/302600_302699/3026360401/01.02.01_60/en_3026360401v010201p.pdf).
 The library is fully conformed to [ETSI TS 103 097 v1.2.1](http://www.etsi.org/deliver/etsi_ts/103000_103099/103097/01.02.01_60/ts_103097v010201p.pdf)
 with optional support of non-published v1.2.5.
+The new version [ETSI TS 103 097 v1.3.1](http://www.etsi.org/deliver/etsi_ts/103000_103099/103097/01.03.01_60/ts_103097v010301p.pdf) is published at October 2017. It is ASN.1 based and the library is not (yet?) compatible with it.
 
 The library is written in plain C in cross-platform manner and has been compiled and tested in Linux(gcc) and Windows(mingw32,cygwin and Visual C 13) environments.
 
