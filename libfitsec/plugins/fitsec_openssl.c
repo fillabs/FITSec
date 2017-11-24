@@ -45,15 +45,15 @@ static	FSCryptEngine *  OpenSSL_New (const FSCryptEngineConfig * cfg, void * par
 static	void			 OpenSSL_Free(FSCryptEngine*);
 
 static	FSCryptHash *     OpenSSL_HashNew(FSCryptHashAlgorithm alg);
-static	void             OpenSSL_HashFree(FSCryptHash * c);
-static	unsigned char *  OpenSSL_HashCalc(FSCryptHashAlgorithm alg, unsigned char * hash, const void * ptr, int length);
-static	int              OpenSSL_HashInit(FSCryptHash * h);
-static	void             OpenSSL_HashUpdate(FSCryptHash * h, const void * ptr, int length);
-static	void             OpenSSL_HashFinalize(FSCryptHash * h, unsigned char * hash);
+static	void              OpenSSL_HashFree(FSCryptHash * c);
+static	unsigned char *   OpenSSL_HashCalc(FSCryptHashAlgorithm alg, unsigned char * hash, const void * ptr, int length);
+static	int               OpenSSL_HashInit(FSCryptHash * h);
+static	void              OpenSSL_HashUpdate(FSCryptHash * h, const void * ptr, int length);
+static	void              OpenSSL_HashFinalize(FSCryptHash * h, unsigned char * hash);
 
-static FSCryptKey *	     OpenSSL_KeyRead(FSCryptEngine * c, FSCryptPKAlgorithm alg, FSCryptSymmAlgorithm sym, int type, const unsigned char * x, const unsigned char * y);
-static int               OpenSSL_SetPrivateKey(FSCryptKey * k, const unsigned char * value, int vlength);
-static void              OpenSSL_KeyFree(FSCryptKey * k);
+static FSCryptKey *       OpenSSL_KeyRead(FSCryptEngine * c, FSCryptPKAlgorithm alg, FSCryptSymmAlgorithm sym, int type, const unsigned char * x, const unsigned char * y);
+static int                OpenSSL_SetPrivateKey(FSCryptKey * k, const unsigned char * value, int vlength);
+static void               OpenSSL_KeyFree(FSCryptKey * k);
 
 static FSCryptSignature * OpenSSL_ReadSignature(FSCryptEngine * c, const unsigned char * s, const unsigned char * rx, FitSecEccPointType y);
 static FSCryptSignature * OpenSSL_Sign(FSCryptEngine * c, const FSCryptKey * key, const unsigned char * hash);
@@ -95,6 +95,15 @@ FITSEC_EXPORT const FSCryptEngineConfig * FSCryptEngineConfig_OpenSSL()
 {
 	return &_openssl_cfg;
 }
+
+static int BN_bn2bin_a(const BIGNUM *a, unsigned char *to, size_t fsize)
+{
+	size_t bcount = BN_num_bytes(a);
+	for(; bcount < fsize; bcount++)
+		*(to++) = 0; // add padding with zeros
+	return BN_bn2bin(a, to);
+}
+
 
 /*************************************************************************************************/
 typedef struct SHAConfig {
@@ -230,7 +239,6 @@ static void OpenSSL_KeyFree(FSCryptKey * k)
 	EC_KEY_free((EC_KEY *)k);
 }
 
-
 static FSCryptSignature * OpenSSL_ReadSignature(FSCryptEngine * c, const unsigned char * s, const unsigned char * rx, FitSecEccPointType type)
 {
 	// ignore type
@@ -253,9 +261,9 @@ static void OpenSSL_FreeSignature(FSCryptSignature* t)
 static void OpenSSL_WriteSignature(FSCryptSignature* t, unsigned char * s, unsigned char * rx, FitSecEccPointType * type)
 {
 	ECDSA_SIG * ecdsa = (ECDSA_SIG*)t;
-	BN_bn2bin(ecdsa->r, rx);
-	BN_bn2bin(ecdsa->s, s);
-	if (type)*type = 0; // uncompressed
+	BN_bn2bin_a(ecdsa->r, rx, 32);
+	BN_bn2bin_a(ecdsa->s, s, 32);
+	if (type)*type = 0; // X-only
 }
 
 static int OpenSSL_VerifySignature(FSCryptSignature* t, const FSCryptKey * key, const unsigned char * hash)
